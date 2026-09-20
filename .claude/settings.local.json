@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__node_repl__js",
+      "Bash(npx skills@latest *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "cloudbase"
+  ]
+}

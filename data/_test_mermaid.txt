@@ -1,0 +1,47 @@
+graph TB
+  classDef ioc fill:#ff9800,stroke:#e65100,color:#fff
+  classDef group fill:#f44336,stroke:#b71c1c,color:#fff
+  classDef report fill:#4caf50,stroke:#1b5e20,color:#fff
+  classDef technique fill:#2196f3,stroke:#0d47a1,color:#fff
+  classDef cve fill:#9c27b0,stroke:#6a1b9a,color:#fff
+
+  report["Report: sample_apt28_report.txt"] :::report
+
+  ioc_0_185_172_39_50["[IP] 185.172.39.50"] :::ioc
+  report -->|contains| ioc_0_185_172_39_50
+  ioc_1_waterforvoiceless_org["[DOM] waterforvoiceless.org"] :::ioc
+  report -->|contains| ioc_1_waterforvoiceless_org
+  ioc_2_https_evil_com_path["[URL] https://evil.com/path"] :::ioc
+  report -->|contains| ioc_2_https_evil_com_path
+  ioc_3_a0f183ea54cb25dd8bdba586935a25["[HASH] a0f183ea54cb25dd8bdba5869"] :::ioc
+  report -->|contains| ioc_3_a0f183ea54cb25dd8bdba586935a25
+  ioc_4_CVE_2024_9680["[CVE] CVE-2024-9680"] :::cve
+  report -->|contains| ioc_4_CVE_2024_9680
+  ioc_5_T1566_001["[T] T1566.001"] :::technique
+  report -->|contains| ioc_5_T1566_001
+  ioc_6_APT29["[GRP] APT29"] :::ioc
+  report -->|contains| ioc_6_APT29
+  ioc_7_attacker_evil_com["[EML] attacker@evil.com"] :::ioc
+  report -->|contains| ioc_7_attacker_evil_com
+
+  group_0["[GRP] APT29"] :::group
+  group_0 -->|attributed_to| report
+  group_0 -->|uses| ioc_0_185_172_39_50
+  group_0 -->|uses| ioc_1_waterforvoiceless_org
+  group_0 -->|uses| ioc_2_https_evil_com_path
+  group_1["[GRP] Cozy Bear"] :::group
+  group_1 -->|attributed_to| report
+  group_1 -->|uses| ioc_0_185_172_39_50
+  group_1 -->|uses| ioc_1_waterforvoiceless_org
+  group_1 -->|uses| ioc_2_https_evil_com_path
+  group_2["[GRP] Midnight Blizzard"] :::group
+  group_2 -->|attributed_to| report
+  group_2 -->|uses| ioc_0_185_172_39_50
+  group_2 -->|uses| ioc_1_waterforvoiceless_org
+  group_2 -->|uses| ioc_2_https_evil_com_path
+
+  185_172_39_50["185.172.39.50"] :::ioc
+  waterforvoiceless_org["waterforvoiceless.org"] :::ioc
+  185_172_39_50 -->|resolves_to| waterforvoiceless_org
+  https_evil_com_path["https://evil.com/path"] :::ioc
+  waterforvoiceless_org -->|hosts| https_evil_com_path

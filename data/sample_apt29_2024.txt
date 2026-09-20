@@ -1,0 +1,55 @@
+APT29 (Cozy Bear / Midnight Blizzard) 威胁情报报告
+========================================================
+
+执行摘要: 本报告分析俄罗斯对外情报局(SVR)关联的 APT29 组织在 2024 年针对多国政府和科技企业的持续性网络间谍活动。该组织利用鱼叉式钓鱼邮件、RDP 文件投递、漏洞利用等多种初始访问手段，配合定制化恶意软件和合法工具实现长期驻留和数据窃取。
+
+技术分析:
+- 初始访问: 鱼叉式钓鱼附件 (T1566.001), 带数字签名的 RDP 文件 (T1566.002), 利用 Zimbra (CVE-2022-27924) 和 TeamCity (CVE-2023-42793) 漏洞 (T1190), 云账号密码喷射 (T1078.004)
+- 执行: PowerShell (T1059.001), WMI (T1047), 用户点击恶意文件 (T1204.002)
+- 持久化: 注册表 Run 键 (T1547.001), 云账号 OAuth 滥用 (T1098), 创建新账号 (T1136)
+- 凭据访问: 密码喷射攻击 (T1110.003), 未加密凭证文件 (T1552.001)
+- 防御规避: Golden SAML (T1550), 禁用安全工具 (T1562.001), 身份冒充 (T1656)
+- C2: 住宅代理/匿名网络中转 (T1090.002), Notion API 通信
+- 横向移动: RDP (T1021.001)
+- 数据渗出: 通过 C2 信道加密传输 (T1041)
+
+恶意软件家族:
+- ENVYSCOUT: 钓鱼邮件投递脚本，释放第二阶段载荷
+- HALFRIG: 四级联投递器，部署 Cobalt Strike Beacon
+- QUARTERRIG: 混淆型投递器，多阶段 shellcode/PE 执行
+- SNOWYAMBER: 利用 Notion API 作为 C2 通信的投递器
+- WINELOADER: 针对德国政党的后门变种
+- FOGGYWEB / MAGICWEB: 定向 ADFS 劫持工具
+- Cobalt Strike / BruteRatel: 商用红队工具被滥用
+
+IOC 指标:
+IP: 135.181.130.232, 141.195.117.125, 142.91.38.80, 149.154.158.133, 185.172.39.50, 185.216.72.182, 151.236.14.116, 178.239.171.41
+域名: waterforvoiceless.org, siestakeying.com, 0x3bd487.open, mail-security-check.net, auth-update-server.com
+URL: https://waterforvoiceless.org/invite.php, https://siestakeying.com/auth.php, https://mail-security-check.net/verify/login, http://auth-update-server.com/download/update.exe
+文件哈希 MD5: 5b1c3d4e5f6a7b8c9d0e1f2a3b4c5d6e
+SHA1: 395da6d4f3c890295f7584132ea73d759bd9d094
+SHA256: a0f183ea54cb25dd8bdba586935a258f0ecd3cba0d94657985bb1ea02af8d42c
+CVE: CVE-2022-27924, CVE-2023-42793, CVE-2024-21413
+ATT&CK: T1566.001, T1566.002, T1190, T1078.004, T1059.001, T1047, T1204.002, T1547.001, T1098, T1136, T1110.003, T1552.001, T1550, T1562.001, T1656, T1090.002, T1021.001, T1041
+威胁组织: APT29, Cozy Bear, Midnight Blizzard, NOBELIUM, The Dukes, UNC2452
+
+受影响行业:
+- 政府部门和外交机构
+- 科技企业（Microsoft, TeamViewer 等）
+- 智库和政策研究机构
+- 国防承包商
+
+归因依据:
+1. TTP 重叠: 密码喷射 + OAuth 滥用 + Golden SAML 技战术组合与 SVR 历史活动一致
+2. 基础设施: 住宅代理和 TOR 网络的使用模式与 APT29 历史基础设施匹配
+3. 目标画像: 主要针对北约成员国外交和政府部门，符合 SVR 情报收集任务
+4. 恶意软件: ENVYSCOUT / HALFRIG 等定制工具为此组织独有
+
+防御建议:
+- 对所有面向公网的系统实施多因素认证(MFA)，优先使用 FIDO2 密钥
+- 修补 CVE-2022-27924 (Zimbra) 和 CVE-2023-42793 (TeamCity)，如无法修补则隔离公网访问
+- 监控 OAuth 应用注册和令牌使用异常，审查非预期的云账号活动
+- 封禁本报告所列 IOC 中的 IP 和域名
+- 在邮件网关上阻止 .rdp 文件附件和不明来源的可执行文件
+- 部署终端检测与响应(EDR)方案，监控 Cobalt Strike 和 BruteRatel 的进程行为特征
+- 实施最小权限原则，限制横向移动的可能性
